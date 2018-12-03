@@ -1,7 +1,7 @@
 #引入必要的库以及包
 import pygame,random
 import os
-
+##########################################################
 
 snakeColor = (0x4c, 0xaf, 0x50)
 # 蛇身颜色
@@ -70,6 +70,9 @@ foodImg = pygame.image.load(os.path.join(imgFolder, 'orb2.png'))
 background = pygame.transform.scale(backImg, (width, height))
 food = pygame.transform.scale(foodImg, (cubeWidth, cubeWidth))
 #调整背景及食物的大小
+pygame.mixer.music.set_volume(0.3)
+#调节音量
+
 
 def drawGrids():
     for i in range(gridWidth):
