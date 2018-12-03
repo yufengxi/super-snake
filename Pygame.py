@@ -2,6 +2,41 @@
 import pygame,random
 import os
 
+
+snakeColor = (0x4c, 0xaf, 0x50)
+# 蛇身颜色
+foodColor = (0x00, 0x8c, 0xba)
+#食物颜色
+bgColor = (0x00, 0x00, 0x00)
+# 背景颜色
+headColor = (0xdd, 0x33, 0)
+#头部颜色
+clock = pygame.time.Clock()
+# 定义计时器
+FPS = 30
+# 屏幕刷新频率
+
+hardLevel = list (range(2,int(FPS/2), 2))
+#设置难度等级
+hardness = hardLevel[0]
+#初始难度
+
+D_LEFT, D_RIGHT, D_UP, D_DOWN = 0, 1, 2, 3
+#设置运动方向
+cubeWidth = 20
+#小方块宽度
+counter = 0
+#设置计数器
+width = 600
+height = 600
+#定义长和宽
+direction = D_RIGHT
+#初始方向向右
+left, top = 300, 300
+#设置方块初始位置
+gridWidth, gridHeight = width //cubeWidth, height // cubeWidth
+#网格数目
+
 running = True
 #定义运行标志函数
 pygame.init()
@@ -10,30 +45,32 @@ screen = pygame.display.set_mode((600, 600), 0, 32)
 # 创建窗口
 pygame.display.set_caption("SUPER SNAKE by Fingal Yu")
 # 窗口标题
-snakeColor = (0x4c, 0xaf, 0x50)
-# 蛇身颜色
-foodColor = (0x00, 0x8c, 0xba)
-#食物颜色
-bgColor = (0x55, 0x55, 0x55)
-# 背景颜色
-clock = pygame.time.Clock()
-# 定义计时器
-FPS = 36
-# 屏幕刷新频率
+pygame.mixer.init()
+#初始化准备载入音乐
 
-D_LEFT, D_RIGHT, D_UP, D_DOWN = 0, 1, 2, 3
-#设置运动方向
-cubeWidth = 20
-#小方块宽度
-counter = 0
-#设置计数器
+baseFolder = os.path.dirname(__file__)
+#根目录为当前文件夹
+musicFolder =  os.path.join(baseFolder,'music')
+#存放音乐的文件夹
+backMusic = pygame.mixer.music.load(os.path.join(musicFolder,'back.mp3'))
+#背景音乐
+biteSound = pygame.mixer.music.load(os.path.join(musicFolder,'armor-light.wav'))
+#吃食物音乐
+imgFolder = os.path.join(baseFolder,'images')
+#图片文件夹
+backImg = pygame.image.load(os.path.join(imgFolder, 'back.jpg'))
+#背景图片
+snakeHeadImg = pygame.image.load(os.path.join(imgFolder, 'head.png'))
+#蛇头图片
+snakeHeadImg.set_colorkey(bgColor)
+#头部背景
+foodImg = pygame.image.load(os.path.join(imgFolder, 'orb2.png'))
+#食物图片
 
-direction = D_RIGHT
-#初始方向向右
-left, top = 300, 300
-#设置方块初始位置
-gridWidth, gridHeight = 600 //cubeWidth, 600 // cubeWidth
-#网格数目
+background = pygame.transform.scale(backImg, (width, height))
+food = pygame.transform.scale(foodImg, (cubeWidth, cubeWidth))
+#调整背景及食物的大小
+
 def drawGrids():
     for i in range(gridWidth):
         pygame.draw.line(screen,(0x00,0x00,0x00),(i * cubeWidth, 0),(i * cubeWidth, 600))
@@ -49,6 +86,12 @@ def drawBody():
     for b in snake_body:
         pygame.draw.rect(screen, snakeColor,(b[0],b[1], cubeWidth, cubeWidth))
 #打印蛇身的函数
+    pygame.draw.rect(screen, headColor,
+                     (snake_body[0][0],
+                      snake_body[0][1],
+                      cubeWidth,
+                      cubeWidth))
+
 
 food_pos = None
 #记录食物位置
