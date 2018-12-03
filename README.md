@@ -1,2 +1,2 @@
 # super-snake
-just 
+just for homework.
